@@ -1,150 +1,137 @@
+// perfil do aluno
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Área do Herói - Escola de Heróis</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Cormorant+Garamond:wght@400;600&display=swap" rel="stylesheet">
-  <style>
-    body { font-family: 'Cormorant Garamond', serif; background-color: #1a0f08; color: #f4e4bc; margin: 0; }
-    .font-title { font-family: 'Cinzel', serif; }
-    .parchment { background-color: #3d2817 !important; border: 2px solid #8b6f47; border-radius: 8px; box-shadow: 0 8px 30px rgba(0,0,0,0.9); }
-    .input-medieval { background-color: #1a0f08; border: 1px solid #8b6f47; color: #f4e4bc; width: 100%; padding: 12px; border-radius: 4px; text-align: center; font-size: 1.2rem; }
-    .btn-medieval { background-color: #8b3a1f; border: 2px solid #c9a961; color: #f4e4bc; font-family: 'Cinzel', serif; cursor: pointer; }
-    .btn-medieval:hover { background-color: #5c2410; }
-    
-    .bar-bg { background-color: #1a0f08; border: 1px solid #8b6f47; height: 14px; border-radius: 7px; overflow: hidden; }
-    .bar-xp { background-color: #c9a961; height: 100%; transition: width 0.8s ease-in-out; }
-    .bar-hp { background-color: #dc2626; height: 100%; transition: width 0.8s ease-in-out; }
-    .bar-mp { background-color: #2563eb; height: 100%; transition: width 0.8s ease-in-out; }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minha Jornada - Escola de Heróis</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Cormorant+Garamond:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Cormorant Garamond', serif; background-color: #1a0f08; color: #f4e4bc; margin: 0; }
+        .font-title { font-family: 'Cinzel', serif; }
+        .parchment { background-color: #3d2817 !important; border: 2px solid #8b6f47; border-radius: 8px; box-shadow: 0 8px 30px rgba(0,0,0,0.9); }
+        
+        /* Barras de Status */
+        .bar-bg { background-color: #1a0f08; border: 1px solid #8b6f47; height: 16px; border-radius: 8px; overflow: hidden; }
+        .bar-xp { background-color: #c9a961; height: 100%; transition: width 1s ease-in-out; }
+        .bar-hp { background-color: #dc2626; height: 100%; transition: width 1s ease-in-out; }
+    </style>
 </head>
 <body class="min-h-screen flex items-center justify-center p-4">
 
-  <div id="login-screen" class="parchment w-full max-w-sm p-8 text-center">
-    <div class="text-6xl mb-4">🛡️</div>
-    <h1 class="font-title text-2xl text-[#c9a961] mb-6">IDENTIFIQUE-SE, HERÓI</h1>
-    <form id="form-login" class="space-y-4">
-      <input type="text" id="login-matricula" class="input-medieval" required placeholder="Sua Matrícula">
-      <button type="submit" class="btn-medieval w-full py-3 rounded font-bold text-lg">VER MINHA FICHA</button>
-    </form>
-    <p id="login-error" class="text-red-500 text-sm mt-4 hidden">Herói não encontrado em nossos pergaminhos.</p>
-  </div>
+    <div id="loading" class="text-[#c9a961] font-title animate-pulse">Buscando seus registros na nuvem...</div>
 
-  <div id="student-dashboard" class="hidden w-full max-w-2xl fade-in">
-    <div class="parchment p-8 relative overflow-hidden">
-      <div class="absolute -top-10 -right-10 text-9xl opacity-5">⚔️</div>
-      
-      <div class="flex flex-col md:flex-row gap-8 items-center md:items-start relative z-10">
-        <div class="text-center">
-          <div id="display-avatar" class="text-9xl mb-2">🧙</div>
-          <div class="bg-[#1a0f08] border-2 border-[#c9a961] p-3 rounded">
-            <div class="font-title text-[#c9a961] text-sm">NÍVEL</div>
-            <div id="display-level" class="font-title text-5xl text-[#f4e4bc] font-black">1</div>
-          </div>
+    <main id="ficha" class="hidden w-full max-w-2xl parchment p-8 md:p-12 relative">
+        <div class="flex flex-col md:flex-row gap-8 items-center">
+            
+            <div class="text-center">
+                <div id="avatar" class="text-9xl mb-4">🧙</div>
+                <div class="inline-block bg-[#1a0f08] border-2 border-[#c9a961] px-6 py-2 rounded">
+                    <div class="font-title text-[#c9a961] text-xs">NÍVEL</div>
+                    <div id="level" class="font-title text-5xl text-[#f4e4bc] font-black">1</div>
+                </div>
+            </div>
+
+            <div class="flex-1 w-full space-y-6">
+                <div>
+                    <h1 id="nome" class="font-title text-4xl text-[#c9a961] leading-tight">HERÓI</h1>
+                    <p id="info" class="text-[#8b6f47] italic font-bold">CARREGANDO...</p>
+                </div>
+
+                <div class="space-y-4">
+                    <div>
+                        <div class="flex justify-between text-xs font-title mb-1">
+                            <span>ENERGIA VITAL (HP)</span><span id="txt-hp">100%</span>
+                        </div>
+                        <div class="bar-bg"><div id="bar-hp" class="bar-hp" style="width: 100%"></div></div>
+                    </div>
+
+                    <div>
+                        <div class="flex justify-between text-xs font-title mb-1 text-[#c9a961]">
+                            <span>EXPERIÊNCIA (XP)</span><span id="txt-xp">0</span>
+                        </div>
+                        <div class="bar-bg"><div id="bar-xp" class="bar-xp" style="width: 0%"></div></div>
+                        <p id="prox-nivel" class="text-[10px] text-[#8b6f47] mt-1 text-right italic font-bold"></p>
+                    </div>
+                </div>
+
+                <button onclick="logout()" class="text-[#8b6f47] hover:text-[#c9a961] underline text-sm pt-4 transition-colors">
+                    Sair da Jornada
+                </button>
+            </div>
         </div>
+    </main>
 
-        <div class="flex-1 w-full space-y-6">
-          <div>
-            <h2 id="display-name" class="font-title text-4xl text-[#c9a961] mb-1">NOME DO HERÓI</h2>
-            <p id="display-turma" class="text-[#8b6f47] italic text-lg">Turma</p>
-          </div>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
+        import { getFirestore, collection, query, where, onSnapshot } 
+        from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
 
-          <div class="space-y-4">
-            <div>
-              <div class="flex justify-between text-xs font-title mb-1">
-                <span>ENERGIA VITAL (HP)</span><span id="label-hp">100/100</span>
-              </div>
-              <div class="bar-bg"><div id="bar-hp" class="bar-hp" style="width: 100%"></div></div>
-            </div>
+        const firebaseConfig = {
+            apiKey: "AIzaSyAQMpPjuznQAL_JhslkjXoWr2iKDLPYCSE",
+            authDomain: "rpg-escola-de-herois.firebaseapp.com",
+            projectId: "rpg-escola-de-herois",
+            storageBucket: "rpg-escola-de-herois.firebasestorage.app",
+            messagingSenderId: "951628766776",
+            appId: "1:951628766776:web:ac6271633142f4ce5490cd"
+        };
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
 
-            <div>
-              <div class="flex justify-between text-xs font-title mb-1 text-blue-400">
-                <span>MANA DE ESTUDO (MP)</span><span id="label-mp">50/50</span>
-              </div>
-              <div class="bar-bg"><div id="bar-mp" class="bar-mp" style="width: 100%"></div></div>
-            </div>
+        // 1. VERIFICAÇÃO DE ACESSO
+        const matriculaLogada = localStorage.getItem('heroi_logado');
 
-            <div>
-              <div class="flex justify-between text-xs font-title mb-1 text-amber-500">
-                <span>EXPERIÊNCIA ACUMULADA</span><span id="label-xp">0 XP</span>
-              </div>
-              <div class="bar-bg"><div id="bar-xp" class="bar-xp" style="width: 0%"></div></div>
-            </div>
-          </div>
-
-          <button onclick="window.location.reload()" class="text-[#8b6f47] underline text-sm mt-4 hover:text-[#c9a961]">
-            Sair da Ficha
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
-    import { getFirestore, collection, query, where, onSnapshot } 
-    from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
-
-    const firebaseConfig = {
-      apiKey: "AIzaSyAQMpPjuznQAL_JhslkjXoWr2iKDLPYCSE",
-      authDomain: "rpg-escola-de-herois.firebaseapp.com",
-      projectId: "rpg-escola-de-herois",
-      storageBucket: "rpg-escola-de-herois.firebasestorage.app",
-      messagingSenderId: "951628766776",
-      appId: "1:951628766776:web:ac6271633142f4ce5490cd"
-    };
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
-
-    const calcularNivel = (xp) => Math.floor(Math.sqrt(xp / 100)) + 1;
-
-    const formLogin = document.getElementById('form-login');
-    const loginScreen = document.getElementById('login-screen');
-    const dashboard = document.getElementById('student-dashboard');
-    const errorMsg = document.getElementById('login-error');
-
-    formLogin.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const matricula = document.getElementById('login-matricula').value.trim();
-      
-      // Busca em tempo real pelo herói com essa matrícula
-      const q = query(collection(db, "heroes"), where("matricula", "==", matricula));
-      
-      onSnapshot(q, (snapshot) => {
-        if (snapshot.empty) {
-          errorMsg.classList.remove('hidden');
+        if (!matriculaLogada) {
+            window.location.href = 'index.html'; // Se não tiver matrícula, volta pro portal
         } else {
-          const hero = snapshot.docs[0].data();
-          loginScreen.classList.add('hidden');
-          dashboard.classList.remove('hidden');
-          atualizarInterface(hero);
+            conectarAoFirebase(matriculaLogada);
         }
-      });
-    });
 
-    function atualizarInterface(hero) {
-      document.getElementById('display-name').textContent = hero.name.toUpperCase();
-      document.getElementById('display-turma').textContent = `Turma: ${hero.turma}`;
-      document.getElementById('display-level').textContent = hero.level;
-      document.getElementById('display-avatar').textContent = hero.avatar || "🧙";
-      
-      // HP e MP
-      document.getElementById('label-hp').textContent = `${hero.hp}/100`;
-      document.getElementById('bar-hp').style.width = `${hero.hp}%`;
-      document.getElementById('label-mp').textContent = `${hero.mp}/50`;
-      document.getElementById('bar-mp').style.width = `${(hero.mp/50)*100}%`;
+        function conectarAoFirebase(matricula) {
+            const q = query(collection(db, "heroes"), where("matricula", "==", matricula));
+            
+            // ESCUTA EM TEMPO REAL
+            onSnapshot(q, (snapshot) => {
+                if (!snapshot.empty) {
+                    const hero = snapshot.docs[0].data();
+                    document.getElementById('loading').classList.add('hidden');
+                    document.getElementById('ficha').classList.remove('hidden');
+                    atualizarFicha(hero);
+                } else {
+                    alert("Dados não encontrados. Você será desconectado.");
+                    logout();
+                }
+            });
+        }
 
-      // Lógica de Barra de XP
-      const nivelAtual = calcularNivel(hero.xp);
-      const xpProximoNivel = Math.pow(nivelAtual, 2) * 100;
-      const xpNivelAnterior = Math.pow(nivelAtual - 1, 2) * 100;
-      const progressoXP = ((hero.xp - xpNivelAnterior) / (xpProximoNivel - xpNivelAnterior)) * 100;
-      
-      document.getElementById('label-xp').textContent = `${hero.xp} XP`;
-      document.getElementById('bar-xp').style.width = `${progressoXP}%`;
-    }
-  </script>
+        function atualizarFicha(hero) {
+            document.getElementById('nome').textContent = hero.name.toUpperCase();
+            document.getElementById('info').textContent = `TURMA ${hero.turma} | MATRÍCULA ${hero.matricula}`;
+            document.getElementById('level').textContent = hero.level;
+            document.getElementById('avatar').textContent = hero.avatar || "🧙";
+            
+            // Atualizar HP
+            document.getElementById('txt-hp').textContent = `${hero.hp}%`;
+            document.getElementById('bar-hp').style.width = `${hero.hp}%`;
+
+            // Lógica de XP para a barra
+            const lvl = hero.level;
+            const xpAtual = hero.xp;
+            const xpNecessarioDesteNivel = Math.pow(lvl - 1, 2) * 100;
+            const xpProximoNivelTotal = Math.pow(lvl, 2) * 100;
+            
+            const progressoNaBarra = ((xpAtual - xpNecessarioDesteNivel) / (xpProximoNivelTotal - xpNecessarioDesteNivel)) * 100;
+            
+            document.getElementById('txt-xp').textContent = `${xpAtual} XP`;
+            document.getElementById('bar-xp').style.width = `${progressoNaBarra}%`;
+            document.getElementById('prox-nivel').textContent = `Faltam ${xpProximoNivelTotal - xpAtual} XP para o Nível ${lvl + 1}`;
+        }
+
+        window.logout = () => {
+            localStorage.removeItem('heroi_logado');
+            window.location.href = 'index.html';
+        };
+    </script>
 </body>
 </html>
